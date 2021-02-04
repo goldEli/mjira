@@ -1,35 +1,27 @@
 import React from "react";
 import { SearchPanel } from "screens/project-list/search-panel";
 import { List } from "screens/project-list/list";
-import { useEffect, useState } from "react";
-import { cleanObject, useDebounce, useMount } from "../../utils";
+import { useState } from "react";
+import { useDebounce, useMount } from "../../utils";
 import { useHttp } from "utils/http";
+import { useProjects } from "utils/project";
+import { useUsers } from "utils/user";
 import styled from "@emotion/styled";
 
 export const ProjectListScreen = () => {
-  const [users, setUsers] = useState([]);
-
   const [param, setParam] = useState({
     name: "",
     personId: "",
   });
   const debouncedParam = useDebounce(param, 200);
-  const [list, setList] = useState([]);
-  const client = useHttp();
-
-  useEffect(() => {
-    client("projects", { data: cleanObject(debouncedParam) }).then(setList);
-  }, [debouncedParam]);
-
-  useMount(() => {
-    client("users").then(setUsers);
-  });
+  const { isLoading, data: list } = useProjects(debouncedParam);
+  const { data: users } = useUsers();
 
   return (
     <Container>
       <h1>项目列表</h1>
-      <SearchPanel users={users} param={param} setParam={setParam} />
-      <List users={users} list={list} />
+      <SearchPanel users={users || []} param={param} setParam={setParam} />
+      <List users={users || []} loading={isLoading} dataSource={list || []} />
     </Container>
   );
 };
