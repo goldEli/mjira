@@ -2,11 +2,11 @@ import React from "react";
 import { SearchPanel } from "screens/project-list/search-panel";
 import { List } from "screens/project-list/list";
 import { useState } from "react";
-import { useDebounce, useMount } from "../../utils";
-import { useHttp } from "utils/http";
+import { useDebounce } from "../../utils";
 import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import styled from "@emotion/styled";
+import Helmet from "react-helmet";
 
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({
@@ -19,6 +19,9 @@ export const ProjectListScreen = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>项目列表</title>
+      </Helmet>
       <h1>项目列表</h1>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       <List users={users || []} loading={isLoading} dataSource={list || []} />
