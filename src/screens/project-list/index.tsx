@@ -7,12 +7,14 @@ import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import styled from "@emotion/styled";
 import Helmet from "react-helmet";
+import { useUrlQueryParam } from "utils/url";
 
 export const ProjectListScreen = () => {
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
+  // const [param, setParam] = useState({
+  //   name: "",
+  //   personId: "",
+  // });
+  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   const debouncedParam = useDebounce(param, 200);
   const { isLoading, data: list } = useProjects(debouncedParam);
   const { data: users } = useUsers();
@@ -30,6 +32,7 @@ export const ProjectListScreen = () => {
     </Container>
   );
 };
+ProjectListScreen.whyDidYouRender = false;
 const Container = styled.div`
   padding: 3.2rem;
 `;
